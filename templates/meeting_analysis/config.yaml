@@ -1,0 +1,19 @@
+description: "Comprehensive meeting analysis template for detailed minutes and action items"
+version: "1.0"
+arguments:
+  - name: "meeting_date"
+    description: "Date of the meeting"
+    required: true
+  - name: "meeting_title"
+    description: "Title or subject of the meeting"
+    required: true
+  - name: "transcript"
+    description: "Full meeting transcript to analyze"
+    required: true
+metadata:
+  tags:
+    - meetings
+    - analysis
+    - minutes
+  suggested_use: "Use for important strategic meetings, client meetings, or any meeting requiring detailed documentation"
+  output_format: "markdown"

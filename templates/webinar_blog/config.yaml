@@ -1,0 +1,22 @@
+description: "Template for converting webinar transcripts into engaging blog posts"
+version: "1.0"
+arguments:
+  - name: "webinar_title"
+    description: "Title of the webinar"
+    required: true
+  - name: "webinar_date"
+    description: "Date of the webinar"
+    required: true
+  - name: "speakers"
+    description: "Names and titles of webinar speakers"
+    required: true
+  - name: "transcript"
+    description: "Full webinar transcript"
+    required: true
+metadata:
+  tags:
+    - webinar
+    - blog
+    - content
+  suggested_use: "Use for creating blog content from recorded webinars and presentations"
+  output_format: "markdown"

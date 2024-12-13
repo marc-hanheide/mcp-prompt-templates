@@ -2,69 +2,76 @@ from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
 import mcp.server.stdio
 import mcp.types as types
+import yaml
+import os
 import asyncio
-import anthropic
 
-class MeetingAnalysisServer(Server):
+class TemplateServer(Server):
     def __init__(self):
-        super().__init__("meeting-analysis-server")
-        # Initialize Claude client
-        self.claude = anthropic.Anthropic()
-
-    async def analyze_with_claude(self, transcript: str) -> str:
-        message = await self.claude.messages.create(
-            model="claude-3-sonnet-20240229",
-            max_tokens=1000,
-            temperature=0,
-            system="You are an Executive Assistant working for a global infrastructure consultancy.",
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Analyze this meeting transcript and provide a structured summary:\n\n{transcript}"
+        super().__init__("analysis-template-server")
+        self.templates = self._load_templates()
+    
+    def _load_templates(self):
+        templates = {}
+        template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+        
+        for category in os.listdir(template_dir):
+            category_path = os.path.join(template_dir, category)
+            if os.path.isdir(category_path):
+                # Load config
+                with open(os.path.join(category_path, 'config.yaml'), 'r') as f:
+                    config = yaml.safe_load(f)
+                
+                # Load template
+                with open(os.path.join(category_path, 'template.md'), 'r') as f:
+                    template = f.read()
+                
+                templates[category] = {
+                    'config': config,
+                    'template': template
                 }
-            ]
-        )
-        return message.content
+        
+        return templates
 
-server = MeetingAnalysisServer()
+server = TemplateServer()
 
 @server.list_prompts()
 async def handle_list_prompts() -> list[types.Prompt]:
-    return [
-        types.Prompt(
-            name="analyze-meeting",
-            description="Analyze meeting transcript",
-            arguments=[
-                types.PromptArgument(
-                    name="transcript",
-                    description="The meeting transcript to analyze",
-                    required=True
-                )
-            ]
+    prompts = []
+    for name, template in server.templates.items():
+        prompts.append(
+            types.Prompt(
+                name=name,
+                description=template['config']['description'],
+                arguments=template['config']['arguments']
+            )
         )
-    ]
+    return prompts
 
 @server.get_prompt()
 async def handle_get_prompt(
     name: str,
     arguments: dict[str, str] | None
 ) -> types.GetPromptResult:
-    if name != "analyze-meeting":
-        raise ValueError(f"Unknown prompt: {name}")
+    if name not in server.templates:
+        raise ValueError(f"Unknown template: {name}")
     
-    transcript = arguments.get("transcript", "")
+    template = server.templates[name]
+    formatted_template = template['template']
     
-    # Get analysis from Claude
-    analysis = await server.analyze_with_claude(transcript)
+    # Replace placeholders with arguments
+    if arguments:
+        for key, value in arguments.items():
+            formatted_template = formatted_template.replace(f"{{{{ {key} }}}}", value)
     
     return types.GetPromptResult(
-        description="Meeting analysis",
+        description=template['config']['description'],
         messages=[
             types.PromptMessage(
                 role="user",
                 content=types.TextContent(
                     type="text",
-                    text=analysis
+                    text=formatted_template
                 )
             )
         ]
@@ -76,7 +83,7 @@ async def run():
             read_stream,
             write_stream,
             InitializationOptions(
-                server_name="meeting-analysis",
+                server_name="analysis-templates",
                 server_version="0.1.0",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
