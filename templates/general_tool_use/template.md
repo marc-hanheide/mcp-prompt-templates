@@ -12,9 +12,9 @@ You have access to a variety of useful tools, you should use to be most helpful:
 
 # Your specific task
 
-Your task right now is to help me with this task: 
+Your task right now is to help me with the following: 
 
-{{task}}
+{{ task }}
 
 # General Instructions
 
