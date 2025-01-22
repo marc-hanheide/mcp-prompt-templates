@@ -1,0 +1,10 @@
+[project]
+name = "mcp-prompt-templates"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["mcp", "mcp[cli]", "pyyaml" ,"anyio"]
+
+[project.scripts]
+mcp-prompt-templates = "server:main"

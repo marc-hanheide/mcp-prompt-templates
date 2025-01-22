@@ -1,0 +1,8 @@
+description: "Act as an agent with access to helpful tools like memory and internet search"
+version: "1.0"
+metadata:
+  tags:
+    - memory
+    - google
+  suggested_use: "Use for geneal purpose tasks that need access to a memory and internet"
+  output_format: "markdown"
