@@ -1,9 +1,11 @@
 description: "Act as an agent with access to helpful tools like memory and internet search"
 version: "1.0"
+
 arguments:
   - name: "task"
     description: "The specific task"
     required: true
+
 metadata:
   tags:
     - memory
