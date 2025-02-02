@@ -1,0 +1,11 @@
+description: "Instruct to generate Powerpoint"
+version: "1.0"
+arguments:
+  - name: "filename"
+    description: Filename to be generated"
+    required: true
+metadata:
+  tags:
+    - powerpoint
+  suggested_use: "Use to generate Powerpoint slides" 
+  output_format: "markdown"
