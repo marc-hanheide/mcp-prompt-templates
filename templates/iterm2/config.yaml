@@ -1,0 +1,9 @@
+description: "Interact with my iTerm2 window"
+version: "1.0"
+arguments:
+metadata:
+  tags:
+    - iTerm2
+    - shell
+  suggested_use: "Use to ineract with my zsh shell in iTerm2" 
+  output_format: "markdown"
