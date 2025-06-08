@@ -2,7 +2,7 @@ description: "Instruct to generate an SVG visual"
 version: "1.0"
 arguments:
   - name: "design"
-    description: "outline briefly the design, including the aspect ratio, colors, and any specific elements you want included"
+    description: "outline briefly the design, including the aspect ratio, colors, fonts to use, and any specific elements you want included"
     required: true
   - name: "content"
     description: "describe what the SVG should semantically contain"
